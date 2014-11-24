@@ -1,0 +1,15 @@
+machine:
+  timezone: Asia/Tokyo
+
+dependencies:
+  pre:
+    - script/ci/circle-prepare.sh
+  cache_directories:
+    - ~/dependencies
+    - ~/.mix
+    - _build
+    - deps
+
+test:
+  override:
+    - script/ci/circle-tests.sh
