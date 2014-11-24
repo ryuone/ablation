@@ -3,7 +3,7 @@ machine:
 
 dependencies:
   pre:
-    - script/ci/circle-prepare.sh
+    - scripts/ci/circle-prepare.sh
   cache_directories:
     - ~/dependencies
     - ~/.mix
@@ -12,4 +12,4 @@ dependencies:
 
 test:
   override:
-    - script/ci/circle-tests.sh
+    - scripts/ci/circle-tests.sh
