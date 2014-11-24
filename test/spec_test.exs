@@ -1,6 +1,5 @@
 defmodule SpecTest do
   use ExUnit.Case
-  doctest Ablation
 
   defmodule SpecNumber do
     use ExUnit.Case
