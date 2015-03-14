@@ -292,7 +292,7 @@ defmodule SpecTest do
         Dict.get(user, :name)
       rescue
         e in UndefinedFunctionError ->
-          assert e === %UndefinedFunctionError{arity: 3, function: :get, module: Spec.StructUser,self: false}
+          assert e === %UndefinedFunctionError{arity: 3, function: :get, module: Spec.StructUser, reason: nil}
       end
     end
     test "Update struct(like Map)" do
