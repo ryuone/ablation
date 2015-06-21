@@ -5,22 +5,22 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "(decimal)1_000_000 is a number" do
-      assert 1_000_000 === 1000000
+      assert Spec.Number.underscore_number === 1000000
     end
     test "(hexadecimal)0x1f is a number" do
-      assert 0x1f === 31
+      assert Spec.Number.hex === 31
     end
     test "(octal)0o765 is a number" do
-      assert 0o765 === 501
+      assert Spec.Number.octal === 501
     end
     test "(binary)0b1010 is a number" do
-      assert 0b1010 === 10
+      assert Spec.Number.binary === 10
     end
     test "(floating)0.314e1 is a number" do
-      assert 0.314e1 === 3.14
+      assert Spec.Number.float1 === 3.14
     end
     test "(floating)314.0e-2 is a number" do
-      assert 314.0e-2 === 3.14
+      assert Spec.Number.float2 === 3.14
     end
   end
 
@@ -28,8 +28,7 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "1..10 and Enum.map +1" do
-      range = 1..10
-      assert [3, 4, 5, 6, 7, 8, 9, 10, 11, 12] === Enum.map range, &(&1 + 2)
+      assert Spec.Range.from_3_to_12 === [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     end
   end
 
@@ -37,8 +36,7 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Regex digit" do
-      reg = ~r{(\d*)}i
-      assert ["123", "123"] === Regex.run reg, "123abc"
+      assert Spec.Regex.regex_digit("123abc") === ["123", "123"]
     end
   end
 
@@ -46,18 +44,7 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Port to get date via date command" do
-      _pid = Port.open({:spawn, "ls README.md"}, [:binary, :stderr_to_stdout, :exit_status])
-      receive do
-        received_data ->
-          {_, port_data} = received_data
-          assert {:data, "README.md\n"} === port_data
-      end
-      receive do
-        received_data ->
-          {_, port_data} = received_data
-          assert {:exit_status, 0} === port_data
-      end
-      # assert [3, 4, 5, 6, 7, 8, 9, 10, 11, 12] === Enum.map range, &(&1 + 2)
+      assert Spec.Port.exec === {{:data, "README.md\n"}, {:exit_status, 0}}
     end
   end
 
@@ -65,22 +52,22 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Is atom :foo" do
-      assert is_atom(:foo) === true
+      assert is_atom(Spec.Atom.atom_foo) === true
     end
     test "Is atom :me@localhost" do
-      assert is_atom(:me@localhost) === true
+      assert is_atom(Spec.Atom.atom_include_atmark) === true
     end
     test "Is atom :\"with spaces\"" do
-      assert is_atom(:"with spaces") === true
+      assert is_atom(Spec.Atom.atom_with_spaces_double_quote) === true
     end
     test "Is atom ':with spaces'" do
-      assert is_atom(:'with spaces') === true
+      assert is_atom(Spec.Atom.atom_with_spaces_single_quote) === true
     end
     test "Is atom :<>" do
-      assert is_atom(:'with spaces') === true
+      assert is_atom(Spec.Atom.atom_inequality) === true
     end
     test "Is atom :===" do
-      assert is_atom(:'with spaces') === true
+      assert is_atom(Spec.Atom.atom_equality) === true
     end
   end
 
@@ -88,38 +75,37 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Is tuple {1, 2}" do
-      assert is_tuple({1, 2}) === true
+      assert is_tuple(Spec.Tuple.normal) === true
     end
     test "Is tuple {:ok, {:name, :\"elixir\"}}" do
-      assert is_tuple({:ok, {:name, :"elixir"}}) === true
+      assert is_tuple(Spec.Tuple.tuple_with_ok) === true
     end
     test "Is tuple {:error, :enoent}" do
-      assert is_tuple({:error, :enoent}) === true
+      assert is_tuple(Spec.Tuple.tuple_with_error) === true
     end
     test "Pattern matching tuple {status, count, action} = {:ok, 42, \"next\"}" do
-      {_status, _count, action} = {:ok, 42, "next"}
+      {_status, _count, action} = Spec.Tuple.tuple_with_status
       assert action === "next"
     end
   end
 
   defmodule SpecRecord do
     use ExUnit.Case
-    require Spec.RecordUser
 
     test "Create record" do
-      assert {:user, "ryuone", :ok} === Spec.RecordUser.user
+      assert {:user, "ryuone", :ok} === Spec.RecordUser.new
     end
 
     test "Create record with argument" do
-      assert {:user, "ryuone", :not_ok} === Spec.RecordUser.user status: :not_ok
+      assert {:user, "ryuone", :not_ok} === Spec.RecordUser.new :not_ok
     end
 
     test "Get zero position value via elem function" do
-      assert :user === Spec.RecordUser.user |> elem 0
+      assert :user === Spec.RecordUser.new |> elem 0
     end
 
     test "Get second position value via elem function" do
-      assert :ok === Spec.RecordUser.user |> elem 2
+      assert :ok === Spec.RecordUser.new |> elem 2
     end
   end
 
@@ -127,10 +113,10 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Append via ++" do
-      assert [1, 2, 3, 4, 1, 2, 3] === [1,2,3] ++ [4,1,2,3]
+      assert Spec.List.append([1,2,3], [4,1,2,3]) === [1, 2, 3, 4, 1, 2, 3]
     end
     test "Remove via --" do
-      assert [5,6,7] === [1,2,3,4,5,6,7] -- [4,1,2,3]
+      assert Spec.List.remove([1,2,3,4,5,6,7], [4,1,2,3]) === [5,6,7]
     end
   end
 
@@ -138,23 +124,23 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Create keyword list" do
-      assert [status: :ok, name: "ryuone"] === Keyword.new name: "ryuone", status: :ok
+      assert Spec.Keywordlist.new name: "ryuone", status: :ok === [status: :ok, name: "ryuone"]
     end
     test "Get :name value from keyword list" do
-      kwlist = Keyword.new name: "ryuone", status: :ok
-      assert "ryuone" === kwlist |> Keyword.get :name
+      kwlist = Spec.Keywordlist.new name: "ryuone", status: :ok
+      assert "ryuone" === kwlist |> Spec.Keywordlist.get :name
     end
     test "Get keylist from keyword list" do
-      kwlist = Keyword.new name: "ryuone", status: :ok
-      assert [:name, :status] === Keyword.keys kwlist |> Enum.sort
+      kwlist = Spec.Keywordlist.new name: "ryuone", status: :ok
+      assert [:name, :status] === kwlist |> Keyword.keys |> Enum.sort
     end
     test "Get values from keyword list" do
-      kwlist = Keyword.new name: "ryuone", status: :ok
-      assert ["ryuone", :ok] === Keyword.values kwlist |> Enum.sort
+      kwlist = Spec.Keywordlist.new name: "ryuone", status: :ok
+      assert [:ok, "ryuone"] === kwlist |> Spec.Keywordlist.values |> Enum.sort
     end
     test "Update value in keyword list" do
-      kwlist = Keyword.new name: "ryuone", status: :ok
-      assert [name: :ryuone, status: :ok] === Keyword.put kwlist, :name, :ryuone
+      kwlist = Spec.Keywordlist.new name: "ryuone", status: :ok
+      assert [name: :ryuone, status: :ok] === kwlist |> Spec.Keywordlist.put :name, :ryuone
     end
   end
 
@@ -162,37 +148,48 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Create map" do
-      assert true === is_map(%{ "Tokyo" => "東京", "Osaka" => "大阪" })
+      assert true === Spec.Map.new |> is_map
     end
     test "Get value via string" do
-      pref = %{ "Tokyo" => "東京", "Osaka" => "大阪" }
+      pref = Spec.Map.new
       assert pref["Osaka"] === "大阪"
     end
     test "Get value like property" do
-      pref = %{ :tokyo => "東京", :osaka => "大阪" }
+      pref = Spec.Map.new_atom_key
       assert pref.tokyo === "東京"
     end
     test "Get value nested" do
-      type = %{ [name: "A"] => "Name A", [name: "B"] => "Name B" }
+      type = Spec.Map.new_list_key
       assert type[[name: "A"]] === "Name A"
     end
     test "Pattern match map" do
-      type = %{ [name: "A"] => "Name A", [name: "B"] => "Name B" }
-      %{[name: "B"] => b} = type
+      %{[name: "B"] => b} = Spec.Map.new_list_key
       assert b === "Name B"
     end
     test "Update map" do
-      pref = %{ :tokyo => "東京", :osaka => "大阪" }
-      pref = %{ pref | :tokyo => "東京都" }
+      pref = Spec.Map.new_atom_key |> Spec.Map.update_tokyo "東京都"
+      assert pref.tokyo === "東京都"
+    end
+    test "Update map with Dict module" do
+      pref = Spec.Map.new_atom_key |> Spec.Map.update :tokyo, "東京都"
       assert pref.tokyo === "東京都"
     end
     test "Update map with not exist key" do
-      pref = %{ :tokyo => "東京", :osaka => "大阪" }
+      pref = Spec.Map.new_atom_key
       try do
         pref = %{ pref | :tokyo_to => "東京都" }
       rescue
         e in ArgumentError ->
           assert e === %ArgumentError{message: "argument error"}
+      end
+    end
+    test "Update map with not exist key and Dict module" do
+      pref = Spec.Map.new_atom_key
+      try do
+        pref = Spec.Map.new_atom_key |> Spec.Map.update :tokyo_to, "東京都"
+      rescue
+        e in KeyError ->
+          assert e === %KeyError{key: :tokyo_to, term: pref}
       end
     end
   end
@@ -202,25 +199,25 @@ defmodule SpecTest do
 
     test "Create HashDict" do
       value = [ one: 1, two: 2, three: 3 ]
-      assert 3 === value |> Enum.into(HashDict.new) |> HashDict.size
+      assert 3 === value |> Enum.into(Spec.Hashdict.new) |> Spec.Hashdict.size
     end
     test "Get values" do
       value = [ one: 1, two: 2, three: 3 ]
-      assert [1,2,3] === value |> Enum.into(HashDict.new) |> HashDict.values |> Enum.sort
+      assert [1,2,3] === value |> Enum.into(Spec.Hashdict.new) |> Spec.Hashdict.values |> Enum.sort
     end
     test "Get keys" do
       value = [ one: 1, two: 2, three: 3 ]
-      assert [:one, :three, :two] === value |> Enum.into(HashDict.new) |> HashDict.keys |> Enum.sort
+      assert [:one, :three, :two] === value |> Enum.into(Spec.Hashdict.new) |> Spec.Hashdict.keys |> Enum.sort
     end
     test "Put value" do
-      hd = [ one: 1, two: 2, three: 3 ] |> Enum.into(HashDict.new)
-      assert [:four, :one, :three, :two] === HashDict.put(hd, :four, 4) |> HashDict.keys |> Enum.sort
+      hd = [ one: 1, two: 2, three: 3 ] |> Enum.into(Spec.Hashdict.new)
+      assert [:four, :one, :three, :two] === hd |> Spec.Hashdict.put(:four, 4) |> Spec.Hashdict.keys |> Enum.sort
     end
     test "Merge value" do
-      hd1 = [ one: 1, two: 2, three: 3 ] |> Enum.into(HashDict.new)
-      hd2 = [ four: 4, five: 5, six: 6 ] |> Enum.into(HashDict.new)
-      assert [:five, :four, :one, :six, :three, :two] === HashDict.merge(hd1, hd2) |> HashDict.keys |> Enum.sort
-      assert [1, 2, 3, 4, 5, 6] === HashDict.merge(hd1, hd2) |> HashDict.values |> Enum.sort
+      hd1 = [ one: 1, two: 2, three: 3 ] |> Enum.into(Spec.Hashdict.new)
+      hd2 = [ four: 4, five: 5, six: 6 ] |> Enum.into(Spec.Hashdict.new)
+      assert [:five, :four, :one, :six, :three, :two] === Spec.Hashdict.merge(hd1, hd2) |> Spec.Hashdict.keys |> Enum.sort
+      assert [1, 2, 3, 4, 5, 6] === Spec.Hashdict.merge(hd1, hd2) |> Spec.Hashdict.values |> Enum.sort
     end
   end
 
@@ -228,28 +225,28 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Create HashSet" do
-      hashset = Enum.into 1..5, HashSet.new
-      assert [1,2,3,4,5] === HashSet.to_list(hashset) |> Enum.sort
+      hashset = Enum.into 1..5, Spec.Hashset.new
+      assert [1,2,3,4,5] === hashset |> Spec.Hashset.to_list |> Enum.sort
     end
     test "HashSet union" do
-      hashset1 = Enum.into 1..3, HashSet.new
-      hashset2 = Enum.into 2..6, HashSet.new
-      assert [1,2,3,4,5,6] === HashSet.union(hashset1, hashset2) |> HashSet.to_list |> Enum.sort
+      hashset1 = Enum.into 1..3, Spec.Hashset.new
+      hashset2 = Enum.into 2..6, Spec.Hashset.new
+      assert [1,2,3,4,5,6] === Spec.Hashset.union(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
     end
     test "HashSet member?" do
-      hashset = Enum.into 1..3, HashSet.new
-      assert true === HashSet.member? hashset, 3
+      hashset = 1..3 |> Enum.into Spec.Hashset.new
+      assert true === hashset |> Spec.Hashset.member? 3
     end
     test "HashSet difference" do
-      hashset1 = Enum.into 1..5, HashSet.new
-      hashset2 = Enum.into 4..10, HashSet.new
-      assert [1,2,3] === HashSet.difference(hashset1, hashset2) |> HashSet.to_list |> Enum.sort
-      assert [6, 7, 8, 9, 10] === HashSet.difference(hashset2, hashset1) |> HashSet.to_list |> Enum.sort
+      hashset1 = 1..5 |> Enum.into HashSet.new
+      hashset2 = 4..10 |> Enum.into HashSet.new
+      assert [1,2,3] === Spec.Hashset.difference(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
+      assert [6, 7, 8, 9, 10] === Spec.Hashset.difference(hashset2, hashset1) |> Spec.Hashset.to_list |> Enum.sort
     end
     test "HashSet intersection" do
-      hashset1 = Enum.into 1..5, HashSet.new
-      hashset2 = Enum.into 4..10, HashSet.new
-      assert [4,5] === HashSet.intersection(hashset1, hashset2) |> HashSet.to_list |> Enum.sort
+      hashset1 = 1..5 |> Enum.into HashSet.new
+      hashset2 = 4..10 |> Enum.into HashSet.new
+      assert [4,5] === Spec.Hashset.intersection(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
     end
   end
 
@@ -257,14 +254,13 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "binary string" do
-      assert "ABab" === <<65, 66, 97, 98>>
+      assert "ABab" === Spec.Binary.bin1
     end
     test "binary string using size" do
-      assert <<213>> === <<3 :: size(2), 5 :: size(4), 1 :: size(2)>>
+      assert <<213>> === Spec.Binary.bin2
     end
     test "binary string pattern match" do
-      <<_hello::binary-size(5), rest::binary>> = "Hello world"
-      assert rest === " world"
+      assert " world" === "Hello world" |> Spec.Binary.bin_match(5)
     end
   end
 
@@ -272,13 +268,13 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Create struct" do
-      user = %Spec.StructUser{name: "ryuone"}
+      user = Spec.StructUser.new "ryuone"
       assert user.name === "ryuone"
       assert user.status === :dont_know
       assert user.__struct__ === Spec.StructUser
     end
     test "Can not access like Hash" do
-      user = %Spec.StructUser{name: "ryuone"}
+      user = Spec.StructUser.new "ryuone"
       try do
         user[:name]
       rescue
@@ -287,7 +283,7 @@ defmodule SpecTest do
       end
     end
     test "Can not use Dict" do
-      user = %Spec.StructUser{name: "ryuone"}
+      user = Spec.StructUser.new "ryuone"
       try do
         Dict.get(user, :name)
       rescue
@@ -296,8 +292,8 @@ defmodule SpecTest do
       end
     end
     test "Update struct(like Map)" do
-      user = %Spec.StructUser{name: "ryuone"}
-      assert %Spec.StructUser{name: "ryuone", status: :fine} === %{user | status: :fine}
+      user = Spec.StructUser.new "ryuone"
+      assert Spec.StructUser.new "ryuone", :fine === Spec.StructUser.update user, status: :fine
     end
   end
 
@@ -305,10 +301,10 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Name is blank in %Spec.StructUser" do
-      assert true === Spec.Blank.blank? %Spec.StructUser{}
+      assert true === Spec.ProtocolBlank.blank? %Spec.StructUser{}
     end
     test "Name is not blank in %Spec.StructUser?" do
-      assert false === Spec.Blank.blank? %Spec.StructUser{name: "ryuone"}
+      assert false === Spec.ProtocolBlank.blank? %Spec.StructUser{name: "ryuone"}
     end
   end
 end
