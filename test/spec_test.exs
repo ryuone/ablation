@@ -44,7 +44,7 @@ defmodule SpecTest do
     use ExUnit.Case
 
     test "Port to get date via date command" do
-      assert Spec.Port.exec === {{:data, "README.md\n"}, {:exit_status, 0}}
+      assert Spec.Port.exec === {{:data, "README.md\n"}}
     end
   end
 
@@ -86,26 +86,6 @@ defmodule SpecTest do
     test "Pattern matching tuple {status, count, action} = {:ok, 42, \"next\"}" do
       {_status, _count, action} = Spec.Tuple.tuple_with_status
       assert action === "next"
-    end
-  end
-
-  defmodule SpecRecord do
-    use ExUnit.Case
-
-    test "Create record" do
-      assert {:user, "ryuone", :ok} === Spec.RecordUser.new
-    end
-
-    test "Create record with argument" do
-      assert {:user, "ryuone", :not_ok} === Spec.RecordUser.new :not_ok
-    end
-
-    test "Get zero position value via elem function" do
-      assert :user === Spec.RecordUser.new |> elem 0
-    end
-
-    test "Get second position value via elem function" do
-      assert :ok === Spec.RecordUser.new |> elem 2
     end
   end
 
@@ -177,16 +157,16 @@ defmodule SpecTest do
     test "Update map with not exist key" do
       pref = Spec.Map.new_atom_key
       try do
-        pref = %{ pref | :tokyo_to => "東京都" }
+        _pref = %{ pref | :tokyo_to => "東京都" }
       rescue
-        e in ArgumentError ->
-          assert e === %ArgumentError{message: "argument error"}
+        e in KeyError ->
+          assert e === %KeyError{key: :tokyo_to, term: nil}
       end
     end
     test "Update map with not exist key and Dict module" do
       pref = Spec.Map.new_atom_key
       try do
-        pref = Spec.Map.new_atom_key |> Spec.Map.update :tokyo_to, "東京都"
+        _pref = Spec.Map.new_atom_key |> Spec.Map.update :tokyo_to, "東京都"
       rescue
         e in KeyError ->
           assert e === %KeyError{key: :tokyo_to, term: pref}
