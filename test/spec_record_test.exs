@@ -1,4 +1,4 @@
-defmodule SpecRecordTest do
+defmodule SpecTest do
 
   defmodule SpecRecord do
     use ExUnit.Case
