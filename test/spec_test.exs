@@ -250,7 +250,7 @@ defmodule SpecTest do
     end
     test "Update struct(like Map)" do
       user = Spec.StructUser.new "ryuone"
-      assert Spec.StructUser.new "ryuone", :fine === Spec.StructUser.update user, status: :fine
+      assert Spec.StructUser.new("ryuone", :fine) === Spec.StructUser.update(user, status: :fine)
     end
   end
 
