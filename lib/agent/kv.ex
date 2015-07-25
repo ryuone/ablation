@@ -20,7 +20,7 @@ defmodule Agent.KV do
     start_link(opts)
   end
   @spec start_link(list) :: on_start
-  def start_link(opts \\ []) do
+  def start_link(opts) do
     GenServer.start_link(__MODULE__, [], opts)
   end
 

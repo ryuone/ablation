@@ -7,7 +7,7 @@ defmodule Ablation do
     import Supervisor.Spec, warn: false
     children = [
       # Define workers and child supervisors to be supervised
-      worker(Agent.KV.Bucket, [])
+      # worker(Agent.KV.Bucket, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
