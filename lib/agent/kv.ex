@@ -63,7 +63,7 @@ defmodule Agent.KV do
   end
   @spec create(server, any) :: :ok
   def create(server, name) do
-    GenServer.cast(server, {:create, name})
+    GenServer.call(server, {:create, name})
   end
 
   @doc """
@@ -91,7 +91,7 @@ defmodule Agent.KV do
   end
 
   @doc """
-  Get value to the specific bucket.
+  Put value to the specific bucket.
   """
   @spec put(any, any, any) :: :ok
   def put(name, key, value) do
@@ -100,6 +100,18 @@ defmodule Agent.KV do
   @spec put(server, any, any, any) :: :ok
   def put(server, name, key, value) do
     lookup!(server, name) |> Agent.KV.Bucket.put key, value
+  end
+
+  @doc """
+  Put value to the specific bucket.
+  """
+  @spec delete(any, any) :: :any
+  def delete(name, key) do
+    lookup!(name) |> Agent.KV.Bucket.delete key
+  end
+  @spec delete(server, any, any) :: :ok
+  def delete(server, name, key) do
+    lookup!(server, name) |> Agent.KV.Bucket.delete key
   end
 
   ########################
@@ -127,19 +139,18 @@ defmodule Agent.KV do
 
   def handle_call(:stop, _from, state) do
     for {_name, pid} <- HashDict.to_list(state) do
-      Logger.info("#{inspect pid}")
       :ok = Agent.KV.Bucket.stop(pid)
     end
     {:stop, :normal, :ok, nil}
   end
 
-  def handle_cast({:create, name}, names) do
+  def handle_call({:create, name}, _from, names) do
     if HashDict.has_key?(names, name) do
-      {:noreply, names}
+      {:reply, {:ok, :already_started}, names}
     else
       {:ok, bucket} = Agent.KV.Bucket.start_link()
       true = Process.link(bucket)
-      {:noreply, HashDict.put(names, name, bucket)}
+      {:reply, {:ok, bucket}, HashDict.put(names, name, bucket)}
     end
   end
 end
