@@ -1,0 +1,4 @@
+%{"cowboy": {:git, "https://github.com/extend/cowboy.git", "e25634cd9db82a4760087a2ba68d4c6a76353d66", []},
+  "cowlib": {:git, "https://github.com/ninenines/cowlib.git", "14e597baa42a436469f99661ed7994685e269dc2", [ref: "1.3.0"]},
+  "mimetypes": {:git, "https://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", []},
+  "ranch": {:git, "https://github.com/ninenines/ranch.git", "adf1822defc2b7cfdc7aca112adabfa1d614043c", [ref: "1.0.0"]}}

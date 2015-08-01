@@ -1,4 +1,6 @@
 Ablation
 ========
 
-** TODO: Add description **
+* mix deps.get
+* mix compile
+* mix run --no-halt

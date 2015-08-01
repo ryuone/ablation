@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket client</title>
+    <link href="/static/style/main.css" rel="stylesheet" type="text/css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/app.js"></script>
+  </head>
+
+  <body>
+    <div id="header">
+      <h1>Websocket client</h1>
+      <div id="status"></div>
+    </div>
+
+    <div id="ws_condition">
+
+      <p id="connecting">
+        <input type='text' id="server" value="ws://localhost:8080/websocket"></input>
+        <button type="button" id="connect_btn" onclick="toggle_connection()">Connect</button>
+      </p>
+
+      <div id="connected">
+        <p>
+          <input type='text' id="send_text" value=></input>
+          <button type="button" onclick="sendText();">Send to everyone</button>
+        </p>
+      </div>
+
+      <div id="content">
+        <button id="clear" onclick="clearScreen()" >Clear</button>
+        <div id="output"></div>
+      </div>
+
+    </div>
+  </body>
+</html>
