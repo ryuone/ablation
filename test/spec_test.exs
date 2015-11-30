@@ -85,7 +85,7 @@ defmodule SpecTest do
     end
     test "Get :name value from keyword list" do
       kwlist = Spec.Keywordlist.new name: "ryuone", status: :ok
-      assert "ryuone" === kwlist |> Spec.Keywordlist.get :name
+      assert "ryuone" === kwlist |> Spec.Keywordlist.get(:name)
     end
     test "Get keylist from keyword list" do
       kwlist = Spec.Keywordlist.new name: "ryuone", status: :ok
@@ -97,7 +97,7 @@ defmodule SpecTest do
     end
     test "Update value in keyword list" do
       kwlist = Spec.Keywordlist.new name: "ryuone", status: :ok
-      assert [name: :ryuone, status: :ok] === kwlist |> Spec.Keywordlist.put :name, :ryuone
+      assert [name: :ryuone, status: :ok] === kwlist |> Spec.Keywordlist.put(:name, :ryuone)
     end
   end
 
@@ -124,11 +124,11 @@ defmodule SpecTest do
       assert b === "Name B"
     end
     test "Update map" do
-      pref = Spec.Map.new_atom_key |> Spec.Map.update_tokyo "東京都"
+      pref = Spec.Map.new_atom_key |> Spec.Map.update_tokyo("東京都")
       assert pref.tokyo === "東京都"
     end
     test "Update map with Dict module" do
-      pref = Spec.Map.new_atom_key |> Spec.Map.update :tokyo, "東京都"
+      pref = Spec.Map.new_atom_key |> Spec.Map.update(:tokyo, "東京都")
       assert pref.tokyo === "東京都"
     end
     test "Update map with not exist key" do
@@ -141,12 +141,12 @@ defmodule SpecTest do
       end
     end
     test "Update map with not exist key and Dict module" do
-      pref = Spec.Map.new_atom_key
+      _pref = Spec.Map.new_atom_key
       try do
-        _pref = Spec.Map.new_atom_key |> Spec.Map.update :tokyo_to, "東京都"
+        __pref = Spec.Map.new_atom_key |> Spec.Map.update(:tokyo_to, "東京都")
       rescue
         e in KeyError ->
-          assert e === %KeyError{key: :tokyo_to, term: pref}
+          assert e === %KeyError{key: :tokyo_to, term: nil}
       end
     end
   end
@@ -191,18 +191,18 @@ defmodule SpecTest do
       assert [1,2,3,4,5,6] === Spec.Hashset.union(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
     end
     test "HashSet member?" do
-      hashset = 1..3 |> Enum.into Spec.Hashset.new
-      assert true === hashset |> Spec.Hashset.member? 3
+      hashset = 1..3 |> Enum.into(Spec.Hashset.new)
+      assert true === (hashset |> Spec.Hashset.member?(3))
     end
     test "HashSet difference" do
-      hashset1 = 1..5 |> Enum.into HashSet.new
-      hashset2 = 4..10 |> Enum.into HashSet.new
+      hashset1 = 1..5 |> Enum.into(HashSet.new)
+      hashset2 = 4..10 |> Enum.into(HashSet.new)
       assert [1,2,3] === Spec.Hashset.difference(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
       assert [6, 7, 8, 9, 10] === Spec.Hashset.difference(hashset2, hashset1) |> Spec.Hashset.to_list |> Enum.sort
     end
     test "HashSet intersection" do
-      hashset1 = 1..5 |> Enum.into HashSet.new
-      hashset2 = 4..10 |> Enum.into HashSet.new
+      hashset1 = (1..5 |> Enum.into(HashSet.new))
+      hashset2 = (4..10 |> Enum.into(HashSet.new))
       assert [4,5] === Spec.Hashset.intersection(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
     end
   end
@@ -235,8 +235,8 @@ defmodule SpecTest do
       try do
         user[:name]
       rescue
-        e in Protocol.UndefinedError ->
-          assert e === %Protocol.UndefinedError{description: nil, protocol: Access, value: %Spec.StructUser{name: "ryuone", status: :dont_know}}
+        e in UndefinedFunctionError ->
+          assert e === %UndefinedFunctionError{arity: 2, function: :fetch, module: Spec.StructUser, reason: nil}
       end
     end
     test "Can not use Dict" do

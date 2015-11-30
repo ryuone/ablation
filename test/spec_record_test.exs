@@ -10,10 +10,10 @@ defmodule SpecRecordTest do
   end
 
   test "Get zero position value via elem function" do
-    assert :user === Spec.RecordUser.new |> elem 0
+    assert :user === Spec.RecordUser.new |> elem(0)
   end
 
   test "Get second position value via elem function" do
-    assert :ok === Spec.RecordUser.new |> elem 2
+    assert :ok === Spec.RecordUser.new |> elem(2)
   end
 end
