@@ -3,6 +3,7 @@ machine:
 
 dependencies:
   pre:
+    - sudo apt-get update; sudo apt-get install autoconf libncurses-dev build-essential libssl-dev
     - scripts/ci/circle-prepare.sh
   cache_directories:
     - ~/dependencies/otp_src_18.2.4
