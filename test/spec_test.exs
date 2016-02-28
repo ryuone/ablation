@@ -236,7 +236,7 @@ defmodule SpecTest do
         user[:name]
       rescue
         e in UndefinedFunctionError ->
-          assert e === %UndefinedFunctionError{arity: 2, function: :fetch, module: Spec.StructUser, reason: nil}
+          assert e === %UndefinedFunctionError{arity: 2, function: :fetch, module: Spec.StructUser, reason: "Spec.StructUser does not implement the Access behaviour"}
       end
     end
     test "Can not use Dict" do
