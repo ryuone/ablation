@@ -14,9 +14,13 @@ cd $INSTALL_PATH
 
 # Install erlang
 if [ ! -e $ERLANG_PATH/bin/erl ]; then
+  aptitude install autoconf libncurses-dev build-essential libssl-dev
+
   git clone --depth 1 -b OTP-$ERLANG_VERSION https://github.com/erlang/otp.git $ERLANG_PATH
   cd $ERLANG_PATH
   export ERL_TOP=`pwd`
+  echo $ERL_TOP
+  echo ./otp_build autoconf
   ./otp_build autoconf
   ./configure --enable-smp-support \
               --enable-m64-build \

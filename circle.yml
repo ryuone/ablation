@@ -5,7 +5,7 @@ dependencies:
   pre:
     - scripts/ci/circle-prepare.sh
   cache_directories:
-    - ~/dependencies/otp_src_18.0
+    - ~/dependencies/otp_src_18.2.4
     - ~/.mix
     - _build
     - deps
