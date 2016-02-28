@@ -2,7 +2,7 @@
 
 set -e
 
-export ERLANG_VERSION="18.0"
+export ERLANG_VERSION="18.2.4"
 export ELIXIR_VERSION="master"
 export INSTALL_PATH="$HOME/dependencies"
 
@@ -14,8 +14,7 @@ cd $INSTALL_PATH
 
 # Install erlang
 if [ ! -e $ERLANG_PATH/bin/erl ]; then
-  curl -O http://www.erlang.org/download/otp_src_$ERLANG_VERSION.tar.gz
-  tar xzf otp_src_$ERLANG_VERSION.tar.gz
+  git clone --depth 1 https://github.com/erlang/otp.git $ERLANG_PATH -b OTP-$ERLANG_VERSION
   cd $ERLANG_PATH
   ./configure --enable-smp-support \
               --enable-m64-build \
@@ -35,9 +34,8 @@ fi
 export PATH="$ERLANG_PATH/bin:$PATH"
 
 if [ ! -e $ELIXIR_PATH/bin/elixir ]; then
-  git clone https://github.com/elixir-lang/elixir $ELIXIR_PATH
+  git clone --depth 1 https://github.com/elixir-lang/elixir $ELIXIR_PATH -b $ELIXIR_VERSION
   cd $ELIXIR_PATH
-  git checkout $ELIXIR_VERSION
   make
 
   # Symlink to make it easier to setup PATH to run tests
