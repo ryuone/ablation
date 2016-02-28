@@ -151,62 +151,6 @@ defmodule SpecTest do
     end
   end
 
-  defmodule SpecHashDict do
-    use ExUnit.Case
-
-    test "Create HashDict" do
-      value = [ one: 1, two: 2, three: 3 ]
-      assert 3 === value |> Enum.into(Spec.Hashdict.new) |> Spec.Hashdict.size
-    end
-    test "Get values" do
-      value = [ one: 1, two: 2, three: 3 ]
-      assert [1,2,3] === value |> Enum.into(Spec.Hashdict.new) |> Spec.Hashdict.values |> Enum.sort
-    end
-    test "Get keys" do
-      value = [ one: 1, two: 2, three: 3 ]
-      assert [:one, :three, :two] === value |> Enum.into(Spec.Hashdict.new) |> Spec.Hashdict.keys |> Enum.sort
-    end
-    test "Put value" do
-      hd = [ one: 1, two: 2, three: 3 ] |> Enum.into(Spec.Hashdict.new)
-      assert [:four, :one, :three, :two] === hd |> Spec.Hashdict.put(:four, 4) |> Spec.Hashdict.keys |> Enum.sort
-    end
-    test "Merge value" do
-      hd1 = [ one: 1, two: 2, three: 3 ] |> Enum.into(Spec.Hashdict.new)
-      hd2 = [ four: 4, five: 5, six: 6 ] |> Enum.into(Spec.Hashdict.new)
-      assert [:five, :four, :one, :six, :three, :two] === Spec.Hashdict.merge(hd1, hd2) |> Spec.Hashdict.keys |> Enum.sort
-      assert [1, 2, 3, 4, 5, 6] === Spec.Hashdict.merge(hd1, hd2) |> Spec.Hashdict.values |> Enum.sort
-    end
-  end
-
-  defmodule SpecHashSet do
-    use ExUnit.Case
-
-    test "Create HashSet" do
-      hashset = Enum.into 1..5, Spec.Hashset.new
-      assert [1,2,3,4,5] === hashset |> Spec.Hashset.to_list |> Enum.sort
-    end
-    test "HashSet union" do
-      hashset1 = Enum.into 1..3, Spec.Hashset.new
-      hashset2 = Enum.into 2..6, Spec.Hashset.new
-      assert [1,2,3,4,5,6] === Spec.Hashset.union(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
-    end
-    test "HashSet member?" do
-      hashset = 1..3 |> Enum.into(Spec.Hashset.new)
-      assert true === (hashset |> Spec.Hashset.member?(3))
-    end
-    test "HashSet difference" do
-      hashset1 = 1..5 |> Enum.into(HashSet.new)
-      hashset2 = 4..10 |> Enum.into(HashSet.new)
-      assert [1,2,3] === Spec.Hashset.difference(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
-      assert [6, 7, 8, 9, 10] === Spec.Hashset.difference(hashset2, hashset1) |> Spec.Hashset.to_list |> Enum.sort
-    end
-    test "HashSet intersection" do
-      hashset1 = (1..5 |> Enum.into(HashSet.new))
-      hashset2 = (4..10 |> Enum.into(HashSet.new))
-      assert [4,5] === Spec.Hashset.intersection(hashset1, hashset2) |> Spec.Hashset.to_list |> Enum.sort
-    end
-  end
-
   defmodule SpecBinary do
     use ExUnit.Case
 
