@@ -17,6 +17,7 @@ if [ ! -e $ERLANG_PATH/bin/erl ]; then
   git clone --depth 1 -b OTP-$ERLANG_VERSION https://github.com/erlang/otp.git $ERLANG_PATH
   cd $ERLANG_PATH
   export ERL_TOP=`pwd`
+  ./otp_build autoconf
   ./configure --enable-smp-support \
               --enable-m64-build \
               --disable-native-libs \
