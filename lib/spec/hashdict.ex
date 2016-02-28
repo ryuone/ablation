@@ -12,7 +12,7 @@ defmodule Spec.Hashdict do
     hd |> HashDict.keys
   end
   def put hd, k, v do
-    hd |> HashDict.put k, v
+    hd |> HashDict.put(k, v)
   end
   def merge hd1, hd2 do
     HashDict.merge hd1, hd2

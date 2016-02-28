@@ -9,7 +9,7 @@ defmodule Spec.Hashset do
     HashSet.union hs1, hs2
   end
   def member? hs, v do
-    hs |> HashSet.member? v
+    hs |> HashSet.member?(v)
   end
   def difference hs1, hs2 do
     HashSet.difference hs1, hs2
